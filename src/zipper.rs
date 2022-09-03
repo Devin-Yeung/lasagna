@@ -1,7 +1,9 @@
 use std::fs::{File, read};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::{Path};
+use zip::write::FileOptions;
 use zip::ZipWriter;
+use crate::fs;
 use crate::fs::FileCollector;
 
 pub struct Zipper {
@@ -34,7 +36,9 @@ impl Zipper {
         let mut dirs = self.collector.relative_dirs();
         dirs.remove(0);
         for dir_name in dirs {
-            self.writer.add_directory(dir_name.to_str().unwrap(), Default::default()).expect("TODO");
+            let mut option: FileOptions = Default::default();
+            option = option.last_modified_time(fs::last_modified(dir_name));
+            self.writer.add_directory(dir_name.to_str().unwrap(), option).unwrap();
             self.dirs_count += 1;
         }
         self
@@ -42,7 +46,9 @@ impl Zipper {
 
     pub fn build_files(mut self) -> Self {
         for (absolute, relative) in self.collector.files() {
-            self.writer.start_file(relative.to_str().unwrap(), Default::default()).expect("TODO");
+            let mut option: FileOptions = Default::default();
+            option = option.last_modified_time(fs::last_modified(absolute));
+            self.writer.start_file(relative.to_str().unwrap(), option).unwrap();
             // file copy
             let file = File::open(absolute).unwrap();
             let mut reader = BufReader::new(file);

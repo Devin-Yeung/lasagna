@@ -1,5 +1,7 @@
+use std::fs;
 use std::path::{Path, PathBuf};
 use ignore::{Walk, WalkBuilder};
+use time::OffsetDateTime;
 use crate::Config;
 
 
@@ -20,6 +22,14 @@ pub fn parent_dir_name<T: AsRef<Path>>(path: T) -> String {
     parent_dir.to_str().unwrap().to_string()
     // parent_dir.to_path_buf()
 }
+
+pub fn last_modified<T: AsRef<Path>>(path: T) -> zip::DateTime {
+    let meta = fs::metadata(path).unwrap();
+    let system_time = meta.modified().unwrap();
+    let offset_time = OffsetDateTime::from(system_time);
+    zip::DateTime::from_time(offset_time).unwrap()
+}
+
 
 
 #[derive(Debug)]
