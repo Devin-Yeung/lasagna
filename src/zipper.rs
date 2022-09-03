@@ -8,7 +8,7 @@ pub struct Zipper {
     collector: FileCollector,
     writer: ZipWriter<File>,
     dirs_count: u32,
-    files_count:u32,
+    files_count: u32,
 }
 
 
@@ -26,12 +26,14 @@ impl Zipper {
             collector,
             writer,
             dirs_count: 0,
-            files_count: 0
+            files_count: 0,
         }
     }
 
     pub fn build_dir(mut self) -> Self {
-        for dir_name in self.collector.relative_dirs() {
+        let mut dirs = self.collector.relative_dirs();
+        dirs.remove(0);
+        for dir_name in dirs {
             self.writer.add_directory(dir_name.to_str().unwrap(), Default::default()).expect("TODO");
             self.dirs_count += 1;
         }
