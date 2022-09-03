@@ -1,5 +1,5 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader, Write};
+use std::fs::{File, read};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::path::{Path};
 use zip::ZipWriter;
 use crate::fs::FileCollector;
@@ -44,10 +44,14 @@ impl Zipper {
         for (absolute, relative) in self.collector.files() {
             self.writer.start_file(relative.to_str().unwrap(), Default::default()).expect("TODO");
             // file copy
-            let file = File::open(absolute).expect("TODO");
+            let file = File::open(absolute).unwrap();
             let mut reader = BufReader::new(file);
-            let buf = reader.fill_buf().unwrap();
-            self.writer.write_all(buf).expect("TODO");
+            let mut buffer = [0; 1024];
+            loop {
+                let count = reader.read(&mut buffer).unwrap();
+                if count == 0 { break; }
+                self.writer.write(&buffer[..count]).unwrap();
+            }
             self.files_count += 1;
         }
         self
