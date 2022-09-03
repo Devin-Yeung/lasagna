@@ -3,10 +3,11 @@ use std::io::{BufRead, BufReader, Read, Write};
 use std::path::{Path};
 use zip::write::FileOptions;
 use zip::ZipWriter;
-use crate::fs;
+use crate::{Config, fs};
 use crate::fs::FileCollector;
 
-pub struct Zipper {
+pub struct Zipper<'a> {
+    config: &'a Config,
     collector: FileCollector,
     writer: ZipWriter<File>,
     dirs_count: u32,
@@ -14,21 +15,20 @@ pub struct Zipper {
 }
 
 
-impl Zipper {
-    pub fn new<T, U>(directory: U, output: T) -> Zipper
-        where T: AsRef<Path>,
-              U: AsRef<Path>
+impl<'a> Zipper<'a> {
+    pub fn new(config: &'a Config) -> Zipper
     {
-        let path = std::path::Path::new(output.as_ref());
+        let path = std::path::Path::new(&config.output);
         let file = std::fs::File::create(&path).unwrap();
         let writer = zip::ZipWriter::new(file);
-        let collector = FileCollector::new(directory);
+        let collector = FileCollector::new(&config.input);
 
         Zipper {
             collector,
             writer,
             dirs_count: 0,
             files_count: 0,
+            config,
         }
     }
 
@@ -38,7 +38,13 @@ impl Zipper {
         for dir_name in dirs {
             let mut option: FileOptions = Default::default();
             option = option.last_modified_time(fs::last_modified(dir_name));
-            self.writer.add_directory(dir_name.to_str().unwrap(), option).unwrap();
+            let name = if self.config.parent {
+                format!("{}/{}",self.config.output.file_stem().unwrap().to_str().unwrap(),
+                        dir_name.to_str().unwrap())
+            } else {
+                format!("{}", dir_name.to_str().unwrap())
+            };
+            self.writer.add_directory(name, option).unwrap();
             self.dirs_count += 1;
         }
         self
@@ -48,7 +54,13 @@ impl Zipper {
         for (absolute, relative) in self.collector.files() {
             let mut option: FileOptions = Default::default();
             option = option.last_modified_time(fs::last_modified(absolute));
-            self.writer.start_file(relative.to_str().unwrap(), option).unwrap();
+            let name = if self.config.parent {
+                format!("{}/{}",self.config.output.file_stem().unwrap().to_str().unwrap(),
+                        relative.to_str().unwrap())
+            } else {
+                format!("{}", relative.to_str().unwrap())
+            };
+            self.writer.start_file(name, option).unwrap();
             // file copy
             let file = File::open(absolute).unwrap();
             let mut reader = BufReader::new(file);
@@ -71,12 +83,9 @@ impl Zipper {
 
 #[cfg(test)]
 mod test {
-    use crate::zipper::Zipper;
+    use crate::zipper::zipper;
 
     #[test]
     fn it_works() {
-        Zipper::new("./ziptest", "./ziptest/build/test.zip")
-            .build_dir()
-            .build_files();
     }
 }

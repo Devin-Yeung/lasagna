@@ -47,8 +47,8 @@ pub struct FileStream<'a> {
 }
 
 impl<'a> FileStream<'a> {
-    pub fn new<T: AsRef<Path>>(path: T, config: &'a Config) -> FileStream<'a> {
-        FileStream::from(walker(path, Some(config)))
+    pub fn new(config: &'a Config) -> FileStream<'a> {
+        FileStream::from(walker(&config.input, Some(config)))
     }
 
     pub fn display(&self) {

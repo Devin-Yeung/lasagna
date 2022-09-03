@@ -29,4 +29,7 @@ pub struct CLI {
     /// read gitignore as part of .zipignore
     #[clap(long, action = clap::ArgAction::SetTrue, default_value="false")]
     pub read_gitignore: bool,
+    ///wrap all the files with output file name, parent file name by default
+    #[clap(long, action = clap::ArgAction::SetTrue, default_value="false")]
+    pub parent: bool,
 }
