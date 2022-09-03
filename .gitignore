@@ -1,0 +1,6 @@
+/target
+/.idea/
+/.zipignore
+.DS_Store
+/ziptest
+lasagna.zip
