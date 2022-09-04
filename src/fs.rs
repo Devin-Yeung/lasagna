@@ -1,7 +1,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 use ignore::{Walk, WalkBuilder};
-use time::OffsetDateTime;
+use time::macros::offset;
+use time::{OffsetDateTime, UtcOffset};
 use crate::Config;
 
 
@@ -27,7 +28,9 @@ pub fn last_modified<T: AsRef<Path>>(path: T) -> zip::DateTime {
     let meta = fs::metadata(path).unwrap();
     let system_time = meta.modified().unwrap();
     let offset_time = OffsetDateTime::from(system_time);
-    zip::DateTime::from_time(offset_time).unwrap()
+    let local_offset = UtcOffset::current_local_offset().unwrap();
+    let local_time =  offset_time.to_offset(local_offset);
+    zip::DateTime::from_time(local_time).unwrap()
 }
 
 
