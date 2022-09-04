@@ -23,13 +23,13 @@ pub struct CLI {
     /// Dry Run
     #[clap(long, action = clap::ArgAction::SetTrue)]
     pub dry_run: bool,
-    /// ignore hidden files
+    /// Ignore hidden files
     #[clap(long, action = clap::ArgAction::SetTrue, default_value="false")]
     pub ignore_hidden: bool,
-    /// read gitignore as part of .zipignore
+    /// Read gitignore as part of .zipignore
     #[clap(long, action = clap::ArgAction::SetTrue, default_value="false")]
     pub read_gitignore: bool,
-    ///wrap all the files with output file name, parent file name by default
+    /// Wrap all the files with output file name, parent file name by default
     #[clap(long, action = clap::ArgAction::SetTrue, default_value="false")]
     pub parent: bool,
 }
