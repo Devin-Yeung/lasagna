@@ -68,7 +68,7 @@ impl<'a> Zipper<'a> {
             loop {
                 let count = reader.read(&mut buffer).unwrap();
                 if count == 0 { break; }
-                self.writer.write(&buffer[..count]).unwrap();
+                self.writer.write_all(&buffer[..count]).unwrap();
             }
             self.files_count += 1;
         }
