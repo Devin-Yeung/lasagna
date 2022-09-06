@@ -79,13 +79,3 @@ impl<'a> Zipper<'a> {
         println!("Zip Complete: {} directory(s), {} file(s) in total", self.dirs_count, self.files_count);
     }
 }
-
-
-#[cfg(test)]
-mod test {
-    use crate::zipper::zipper;
-
-    #[test]
-    fn it_works() {
-    }
-}

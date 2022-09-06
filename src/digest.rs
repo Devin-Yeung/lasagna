@@ -80,16 +80,3 @@ impl Display for ZipDigest {
         Ok(())
     }
 }
-
-
-#[cfg(test)]
-mod test {
-    use crate::digest::ZipDigest;
-
-    #[test]
-    fn it_works() {
-        let digest = ZipDigest::new("./ziptest/.zipignore")
-            .md5();
-        println!("{}", digest);
-    }
-}

@@ -143,42 +143,8 @@ impl From<ignore::Walk> for FileStream<'_> {
 
 #[cfg(test)]
 mod test {
-    use std::cell::RefCell;
-    use std::path::{Path};
-    use std::rc::Rc;
-    use ignore::WalkBuilder;
-    use crate::tree::{FileStream, relative_to};
-
-    #[test]
-    fn display_test() {
-        let walker = WalkBuilder::new("./.git")
-            // .add_custom_ignore_filename(&".zipignore")
-            .hidden(false)
-            .build();
-        let fs = FileStream::from(walker);
-        println!("{}", fs);
-    }
-
-    #[test]
-    fn it_works() {
-        let walker = WalkBuilder::new("./")
-            .add_custom_ignore_filename(&".zipignore")
-            .hidden(false)
-            .build();
-        let fs = FileStream::from(walker);
-        for x in fs.items {
-            println!("{:?}", x);
-        }
-    }
-
-
-    #[test]
-    fn it_may_work() {
-        let value = Rc::new(RefCell::new(1));
-        let x = value.clone();
-        *value.borrow_mut() += 2;
-        assert_eq!(*x.borrow(), 3);
-    }
+    use std::path::Path;
+    use crate::tree::relative_to;
 
     #[test]
     fn same_dir() {
