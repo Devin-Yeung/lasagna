@@ -1,11 +1,10 @@
+use md5::{Digest, Md5};
+use sha2::Sha256;
 use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{BufReader, Read};
-use std::path::{PathBuf};
-use md5::{Md5, Digest};
-use sha2::{Sha256};
+use std::path::PathBuf;
 // use hex_literal::hex;
-
 
 pub struct ZipDigest {
     path: PathBuf,
@@ -13,20 +12,20 @@ pub struct ZipDigest {
     sha256: [u8; 32],
 }
 
-
 impl ZipDigest {
     pub fn new<T: Into<PathBuf>>(path: T) -> Self {
         ZipDigest {
             path: path.into(),
             md5: [0; 16],
             sha256: [0; 32],
-        }.md5().sha256()
+        }
+        .md5()
+        .sha256()
     }
 
     pub fn display(&self) {
         println!("{}", self);
     }
-
 
     pub fn md5(mut self) -> Self {
         let file = File::open(&self.path).unwrap();
@@ -37,7 +36,9 @@ impl ZipDigest {
             let mut buffer = [0; 1024];
             loop {
                 let count = reader.read(&mut buffer).unwrap();
-                if count == 0 { break; }
+                if count == 0 {
+                    break;
+                }
                 hasher.update(&buffer[..count]);
             }
             hasher.finalize()
@@ -57,7 +58,9 @@ impl ZipDigest {
             let mut buffer = [0; 1024];
             loop {
                 let count = reader.read(&mut buffer).unwrap();
-                if count == 0 { break; }
+                if count == 0 {
+                    break;
+                }
                 hasher.update(&buffer[..count]);
             }
             hasher.finalize()
@@ -67,9 +70,7 @@ impl ZipDigest {
         self.sha256 = digest.as_slice().try_into().unwrap();
         self
     }
-
 }
-
 
 impl Display for ZipDigest {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

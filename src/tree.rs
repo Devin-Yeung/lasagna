@@ -1,3 +1,7 @@
+use crate::fs::walker;
+use crate::tree_view::{TreeDepth, TreeParams, TreeTrunk};
+use crate::Config;
+use ignore::Walk;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
@@ -5,10 +9,6 @@ use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::vec;
-use ignore::{Walk};
-use crate::Config;
-use crate::fs::walker;
-use crate::tree_view::{TreeDepth, TreeParams, TreeTrunk};
 
 pub fn relative_to(base: &Path, path: &Path) -> Option<usize> {
     for (i, p) in path.ancestors().enumerate() {
@@ -56,7 +56,6 @@ impl<'a> FileStream<'a> {
     }
 }
 
-
 impl Display for FileStream<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut tt = TreeTrunk::default();
@@ -67,7 +66,7 @@ impl Display for FileStream<'_> {
                 rc.deref().borrow().is_last,
             );
             let tree_part = tt.new_row(params);
-            let tree_part: String = tree_part.into_iter().map(|x| { x.ascii_art() }).collect();
+            let tree_part: String = tree_part.into_iter().map(|x| x.ascii_art()).collect();
 
             let fw = rc.deref().borrow();
             let prefix = fw.path.as_path().parent().unwrap();
@@ -79,7 +78,6 @@ impl Display for FileStream<'_> {
     }
 }
 
-
 impl From<ignore::Walk> for FileStream<'_> {
     fn from(walker: Walk) -> Self {
         let mut items: Vec<Rc<RefCell<FileWrapper>>> = vec![];
@@ -87,7 +85,6 @@ impl From<ignore::Walk> for FileStream<'_> {
         // let mut maybe_last_dir: HashMap<PathBuf, Rc<RefCell<FileWrapper>>> = HashMap::new();
         // let mut maybe_last_file: HashMap<PathBuf, Rc<RefCell<FileWrapper>>> = HashMap::new();
         let mut maybe_last: HashMap<PathBuf, Rc<RefCell<FileWrapper>>> = HashMap::new();
-
 
         for entry in walker {
             let entry = entry.unwrap();
@@ -135,16 +132,15 @@ impl From<ignore::Walk> for FileStream<'_> {
 
         FileStream {
             items,
-            config: None
+            config: None,
         }
     }
 }
 
-
 #[cfg(test)]
 mod test {
-    use std::path::Path;
     use crate::tree::relative_to;
+    use std::path::Path;
 
     #[test]
     fn same_dir() {

@@ -1,16 +1,16 @@
+use crate::Config;
+use ignore::{Walk, WalkBuilder};
 use std::fs;
 use std::path::{Path, PathBuf};
-use ignore::{Walk, WalkBuilder};
 use time::macros::offset;
 use time::{OffsetDateTime, UtcOffset};
-use crate::Config;
-
 
 pub fn walker<T: AsRef<Path>>(directory: T, config: Option<&Config>) -> Walk {
     let mut builder = WalkBuilder::new(directory);
     builder.add_custom_ignore_filename(&".zipignore");
     if let Some(config) = config {
-        builder.max_depth(config.depth)
+        builder
+            .max_depth(config.depth)
             .git_ignore(config.read_gitignore)
             .hidden(config.ignore_hidden);
     }
@@ -29,11 +29,9 @@ pub fn last_modified<T: AsRef<Path>>(path: T) -> zip::DateTime {
     let system_time = meta.modified().unwrap();
     let offset_time = OffsetDateTime::from(system_time);
     let local_offset = UtcOffset::current_local_offset().unwrap();
-    let local_time =  offset_time.to_offset(local_offset);
+    let local_time = offset_time.to_offset(local_offset);
     zip::DateTime::from_time(local_time).unwrap()
 }
-
-
 
 #[derive(Debug)]
 pub struct FileCollector {
@@ -48,7 +46,8 @@ impl FileCollector {
             base_dir: PathBuf::from(directory.as_ref()),
             files: vec![],
             dirs: vec![],
-        }.prepare(directory)
+        }
+        .prepare(directory)
     }
 
     fn prepare<T: AsRef<Path>>(mut self, directory: T) -> Self {
@@ -59,7 +58,9 @@ impl FileCollector {
                         self.files.push(s.into_path());
                     } else if s.path().is_dir() {
                         self.dirs.push(s.into_path());
-                    } else { unreachable!() }
+                    } else {
+                        unreachable!()
+                    }
                 }
                 Err(_) => {}
             }
@@ -69,20 +70,30 @@ impl FileCollector {
 
     /// return (absolute, relative)
     pub fn dirs(&self) -> Vec<(&Path, &Path)> {
-        let dirs: Vec<(&Path, &Path)> = self.dirs.iter()
-            .map(|x| (x.as_path(), x.as_path()
-                .strip_prefix(&self.base_dir).unwrap())
-            )
+        let dirs: Vec<(&Path, &Path)> = self
+            .dirs
+            .iter()
+            .map(|x| {
+                (
+                    x.as_path(),
+                    x.as_path().strip_prefix(&self.base_dir).unwrap(),
+                )
+            })
             .collect();
         dirs
     }
 
     /// return (absolute, relative)
     pub fn files(&self) -> Vec<(&Path, &Path)> {
-        let files: Vec<(&Path, &Path)> = self.files.iter()
-            .map(|x| (x.as_path(), x.as_path()
-                .strip_prefix(&self.base_dir).unwrap())
-            )
+        let files: Vec<(&Path, &Path)> = self
+            .files
+            .iter()
+            .map(|x| {
+                (
+                    x.as_path(),
+                    x.as_path().strip_prefix(&self.base_dir).unwrap(),
+                )
+            })
             .collect();
         files
     }

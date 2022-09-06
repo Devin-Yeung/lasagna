@@ -1,10 +1,10 @@
-use std::fs::{File, read};
+use crate::fs::FileCollector;
+use crate::{fs, Config};
+use std::fs::{read, File};
 use std::io::{BufRead, BufReader, Read, Write};
-use std::path::{Path};
+use std::path::Path;
 use zip::write::FileOptions;
 use zip::ZipWriter;
-use crate::{Config, fs};
-use crate::fs::FileCollector;
 
 pub struct Zipper<'a> {
     config: &'a Config,
@@ -14,10 +14,8 @@ pub struct Zipper<'a> {
     files_count: u32,
 }
 
-
 impl<'a> Zipper<'a> {
-    pub fn new(config: &'a Config) -> Zipper
-    {
+    pub fn new(config: &'a Config) -> Zipper {
         let path = std::path::Path::new(&config.output);
         let file = std::fs::File::create(&path).unwrap();
         let writer = zip::ZipWriter::new(file);
@@ -33,16 +31,19 @@ impl<'a> Zipper<'a> {
     }
 
     pub fn build_dir(mut self) -> Self {
-        let mut dirs = self.collector.relative_dirs();
+        let mut dirs = self.collector.dirs();
         dirs.remove(0);
-        for dir_name in dirs {
+        for (absolute, relative) in dirs {
             let mut option: FileOptions = Default::default();
-            option = option.last_modified_time(fs::last_modified(dir_name));
+            option = option.last_modified_time(fs::last_modified(absolute));
             let name = if self.config.parent {
-                format!("{}/{}",self.config.output.file_stem().unwrap().to_str().unwrap(),
-                        dir_name.to_str().unwrap())
+                format!(
+                    "{}/{}",
+                    self.config.output.file_stem().unwrap().to_str().unwrap(),
+                    relative.to_str().unwrap()
+                )
             } else {
-                format!("{}", dir_name.to_str().unwrap())
+                format!("{}", relative.to_str().unwrap())
             };
             self.writer.add_directory(name, option).unwrap();
             self.dirs_count += 1;
@@ -55,8 +56,11 @@ impl<'a> Zipper<'a> {
             let mut option: FileOptions = Default::default();
             option = option.last_modified_time(fs::last_modified(absolute));
             let name = if self.config.parent {
-                format!("{}/{}",self.config.output.file_stem().unwrap().to_str().unwrap(),
-                        relative.to_str().unwrap())
+                format!(
+                    "{}/{}",
+                    self.config.output.file_stem().unwrap().to_str().unwrap(),
+                    relative.to_str().unwrap()
+                )
             } else {
                 format!("{}", relative.to_str().unwrap())
             };
@@ -67,7 +71,9 @@ impl<'a> Zipper<'a> {
             let mut buffer = [0; 1024];
             loop {
                 let count = reader.read(&mut buffer).unwrap();
-                if count == 0 { break; }
+                if count == 0 {
+                    break;
+                }
                 self.writer.write_all(&buffer[..count]).unwrap();
             }
             self.files_count += 1;
@@ -76,6 +82,9 @@ impl<'a> Zipper<'a> {
     }
 
     pub fn finish(self) {
-        println!("Zip Complete: {} directory(s), {} file(s) in total", self.dirs_count, self.files_count);
+        println!(
+            "Zip Complete: {} directory(s), {} file(s) in total",
+            self.dirs_count, self.files_count
+        );
     }
 }

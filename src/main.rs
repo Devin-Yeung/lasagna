@@ -1,20 +1,18 @@
-mod fs;
-mod zipper;
 mod args;
+mod config;
+mod digest;
+mod fs;
 mod tree;
 mod tree_view;
-mod digest;
-mod config;
+mod zipper;
 
-
-use std::path::{PathBuf};
-use clap::{Parser};
 use crate::config::Config;
 use crate::digest::ZipDigest;
 use crate::fs::parent_dir_name;
 use crate::tree::FileStream;
 use crate::zipper::Zipper;
-
+use clap::Parser;
+use std::path::PathBuf;
 
 fn main() {
     let args: args::CLI = args::CLI::parse();
@@ -23,10 +21,7 @@ fn main() {
     FileStream::new(&config).display();
 
     if !args.dry_run {
-        Zipper::new(&config)
-            .build_dir()
-            .build_files()
-            .finish();
+        Zipper::new(&config).build_dir().build_files().finish();
 
         ZipDigest::new(config.output).display();
     }

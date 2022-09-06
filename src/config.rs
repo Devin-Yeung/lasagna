@@ -1,6 +1,6 @@
-use std::path::PathBuf;
-use crate::{args, parent_dir_name};
 use crate::args::CLI;
+use crate::{args, parent_dir_name};
+use std::path::PathBuf;
 
 pub struct Config {
     pub input: PathBuf,
