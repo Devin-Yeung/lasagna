@@ -67,32 +67,14 @@ impl FileCollector {
         self
     }
 
-    pub fn relative_dirs(&self) -> Vec<&Path> {
-        let dirs: Vec<&Path> = self.dirs.iter()
-            .map(|x| x.as_path().
-                strip_prefix(&self.base_dir)
-                .unwrap()
+    /// return (absolute, relative)
+    pub fn dirs(&self) -> Vec<(&Path, &Path)> {
+        let dirs: Vec<(&Path, &Path)> = self.dirs.iter()
+            .map(|x| (x.as_path(), x.as_path()
+                .strip_prefix(&self.base_dir).unwrap())
             )
             .collect();
         dirs
-    }
-
-    pub fn relative_files(&self) -> Vec<&Path> {
-        let files: Vec<&Path> = self.files.iter()
-            .map(|x| x.as_path().
-                strip_prefix(&self.base_dir)
-                .unwrap()
-            )
-            .collect();
-        files
-    }
-
-    pub fn absolute_files(&self) -> Vec<&Path> {
-        let files: Vec<&Path> = self.files.iter()
-            .map(|x| x.as_path()
-            )
-            .collect();
-        files
     }
 
     /// return (absolute, relative)
