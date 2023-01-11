@@ -41,17 +41,17 @@ pub struct FileCollector {
 }
 
 impl FileCollector {
-    pub fn new<T: AsRef<Path>>(directory: T) -> FileCollector {
+    pub fn new<T: AsRef<Path>>(directory: T, config: Option<&Config>) -> FileCollector {
         FileCollector {
             base_dir: PathBuf::from(directory.as_ref()),
             files: vec![],
             dirs: vec![],
         }
-        .prepare(directory)
+            .prepare(directory, config)
     }
 
-    fn prepare<T: AsRef<Path>>(mut self, directory: T) -> Self {
-        for result in walker(directory, None) {
+    fn prepare<T: AsRef<Path>>(mut self, directory: T, config: Option<&Config>) -> Self {
+        for result in walker(directory, config) {
             match result {
                 Ok(s) => {
                     if s.path().is_file() {

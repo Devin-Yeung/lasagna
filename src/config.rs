@@ -2,6 +2,7 @@ use crate::args::CLI;
 use crate::{args, parent_dir_name};
 use std::path::PathBuf;
 
+#[derive(Debug)]
 pub struct Config {
     pub input: PathBuf,
     pub output: PathBuf,

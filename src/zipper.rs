@@ -19,7 +19,7 @@ impl<'a> Zipper<'a> {
         let path = std::path::Path::new(&config.output);
         let file = std::fs::File::create(&path).unwrap();
         let writer = zip::ZipWriter::new(file);
-        let collector = FileCollector::new(&config.input);
+        let collector = FileCollector::new(&config.input, Some(config));
 
         Zipper {
             collector,
