@@ -2,6 +2,7 @@ use crate::fs::FileCollector;
 use crate::{fs, Config};
 use std::fs::{read, File};
 use std::io::{BufRead, BufReader, Read, Write};
+use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use zip::write::FileOptions;
 use zip::ZipWriter;
@@ -34,8 +35,19 @@ impl<'a> Zipper<'a> {
         let mut dirs = self.collector.dirs();
         dirs.remove(0);
         for (absolute, relative) in dirs {
-            let mut option: FileOptions = Default::default();
-            option = option.last_modified_time(fs::last_modified(absolute));
+            let mut option: FileOptions = FileOptions::default()
+                .last_modified_time(fs::last_modified(absolute));
+
+            if cfg!(unix) {
+                let permission = std::fs::File::open(absolute)
+                    .unwrap()
+                    .metadata()
+                    .unwrap()
+                    .permissions()
+                    .mode();
+                option = option.unix_permissions(permission);
+            }
+
             let name = if self.config.parent {
                 format!(
                     "{}/{}",
@@ -53,8 +65,19 @@ impl<'a> Zipper<'a> {
 
     pub fn build_files(mut self) -> Self {
         for (absolute, relative) in self.collector.files() {
-            let mut option: FileOptions = Default::default();
-            option = option.last_modified_time(fs::last_modified(absolute));
+            let mut option: FileOptions = FileOptions::default()
+                .last_modified_time(fs::last_modified(absolute));
+
+            if cfg!(unix) {
+                let permission = std::fs::File::open(absolute)
+                    .unwrap()
+                    .metadata()
+                    .unwrap()
+                    .permissions()
+                    .mode();
+                option = option.unix_permissions(permission);
+            }
+
             let name = if self.config.parent {
                 format!(
                     "{}/{}",
