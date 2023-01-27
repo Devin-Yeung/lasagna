@@ -2,10 +2,12 @@ use crate::fs::FileCollector;
 use crate::{fs, Config};
 use std::fs::{read, File};
 use std::io::{BufRead, BufReader, Read, Write};
-use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use zip::write::FileOptions;
 use zip::ZipWriter;
+
+#[cfg(unix)]
+use std::os::unix::fs::PermissionsExt;
 
 pub struct Zipper<'a> {
     config: &'a Config,
@@ -38,7 +40,8 @@ impl<'a> Zipper<'a> {
             let mut option: FileOptions = FileOptions::default()
                 .last_modified_time(fs::last_modified(absolute));
 
-            if cfg!(unix) {
+            #[cfg(unix)]
+            {
                 let permission = std::fs::File::open(absolute)
                     .unwrap()
                     .metadata()
@@ -68,7 +71,8 @@ impl<'a> Zipper<'a> {
             let mut option: FileOptions = FileOptions::default()
                 .last_modified_time(fs::last_modified(absolute));
 
-            if cfg!(unix) {
+            #[cfg(unix)]
+            {
                 let permission = std::fs::File::open(absolute)
                     .unwrap()
                     .metadata()
