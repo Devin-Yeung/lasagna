@@ -2,7 +2,7 @@ use crate::Config;
 use ignore::{Walk, WalkBuilder};
 use std::fs;
 use std::path::{Path, PathBuf};
-use time::macros::offset;
+
 use time::{OffsetDateTime, UtcOffset};
 
 pub fn walker<T: AsRef<Path>>(directory: T, config: Option<&Config>) -> Walk {
@@ -47,7 +47,7 @@ impl FileCollector {
             files: vec![],
             dirs: vec![],
         }
-            .prepare(directory, config)
+        .prepare(directory, config)
     }
 
     fn prepare<T: AsRef<Path>>(mut self, directory: T, config: Option<&Config>) -> Self {

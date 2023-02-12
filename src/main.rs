@@ -12,7 +12,6 @@ use crate::fs::parent_dir_name;
 use crate::tree::FileStream;
 use crate::zipper::Zipper;
 use clap::Parser;
-use std::path::PathBuf;
 
 fn main() {
     let args: args::CLI = args::CLI::parse();
