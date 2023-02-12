@@ -10,6 +10,8 @@ pub struct Config {
     pub ignore_hidden: bool,
     pub read_gitignore: bool,
     pub parent: bool,
+    pub compression_method: zip::CompressionMethod,
+    pub compression_level: Option<i32>,
 }
 
 impl From<args::CLI> for Config {
@@ -23,6 +25,8 @@ impl From<args::CLI> for Config {
             ignore_hidden: args.ignore_hidden,
             read_gitignore: args.read_gitignore,
             parent: args.parent,
+            compression_method: args.compression_method.into(),
+            compression_level: args.compression_level
         }
     }
 }

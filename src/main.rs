@@ -5,6 +5,7 @@ mod fs;
 mod tree;
 mod tree_view;
 mod zipper;
+mod wrapper;
 
 use crate::config::Config;
 use crate::digest::ZipDigest;
