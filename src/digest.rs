@@ -75,9 +75,9 @@ impl ZipDigest {
 impl Display for ZipDigest {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let md5 = base16ct::lower::encode_string(&self.md5);
-        write!(f, "MD5   : {}\n", md5)?;
+        writeln!(f, "MD5   : {}", md5)?;
         let sha256 = base16ct::lower::encode_string(&self.sha256);
-        write!(f, "SHA256: {}\n", sha256)?;
+        writeln!(f, "SHA256: {}", sha256)?;
         Ok(())
     }
 }

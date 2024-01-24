@@ -7,7 +7,7 @@ use time::{OffsetDateTime, UtcOffset};
 
 pub fn walker<T: AsRef<Path>>(directory: T, config: Option<&Config>) -> Walk {
     let mut builder = WalkBuilder::new(directory);
-    builder.add_custom_ignore_filename(&".zipignore");
+    builder.add_custom_ignore_filename(".zipignore");
     if let Some(config) = config {
         builder
             .max_depth(config.depth)

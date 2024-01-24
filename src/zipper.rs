@@ -20,7 +20,7 @@ pub struct Zipper<'a> {
 impl<'a> Zipper<'a> {
     pub fn new(config: &'a Config) -> Zipper {
         let path = std::path::Path::new(&config.output);
-        let file = std::fs::File::create(&path).unwrap();
+        let file = std::fs::File::create(path).unwrap();
         let writer = zip::ZipWriter::new(file);
         let collector = FileCollector::new(&config.input, Some(config));
 
@@ -60,7 +60,7 @@ impl<'a> Zipper<'a> {
                     relative.to_str().unwrap()
                 )
             } else {
-                format!("{}", relative.to_str().unwrap())
+                relative.to_str().unwrap().to_string()
             };
             self.writer.add_directory(name, option).unwrap();
             self.dirs_count += 1;
@@ -93,7 +93,7 @@ impl<'a> Zipper<'a> {
                     relative.to_str().unwrap()
                 )
             } else {
-                format!("{}", relative.to_str().unwrap())
+                relative.to_str().unwrap().to_string()
             };
             self.writer.start_file(name, option).unwrap();
             // file copy

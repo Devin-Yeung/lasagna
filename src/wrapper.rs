@@ -13,9 +13,9 @@ pub enum CompressionMethod {
     Zstd,
 }
 
-impl Into<zip::CompressionMethod> for CompressionMethod {
-    fn into(self) -> zip::CompressionMethod {
-        match self {
+impl From<CompressionMethod> for zip::CompressionMethod {
+    fn from(val: CompressionMethod) -> Self {
+        match val {
             CompressionMethod::Stored => zip::CompressionMethod::Stored,
             CompressionMethod::Deflated => zip::CompressionMethod::Deflated,
             CompressionMethod::Bzip2 => zip::CompressionMethod::Bzip2,

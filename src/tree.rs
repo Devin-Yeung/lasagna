@@ -16,7 +16,7 @@ pub fn relative_to(base: &Path, path: &Path) -> Option<usize> {
             return Some(i);
         }
     }
-    return None;
+    None
 }
 
 struct FileWrapper {
@@ -66,13 +66,13 @@ impl Display for FileStream<'_> {
                 rc.deref().borrow().is_last,
             );
             let tree_part = tt.new_row(params);
-            let tree_part: String = tree_part.into_iter().map(|x| x.ascii_art()).collect();
+            let tree_part: String = tree_part.iter().map(|x| x.ascii_art()).collect();
 
             let fw = rc.deref().borrow();
             let prefix = fw.path.as_path().parent().unwrap();
             let path = fw.path.strip_prefix(prefix).unwrap();
 
-            write!(f, "{} {}\n", tree_part, path.display())?
+            writeln!(f, "{} {}", tree_part, path.display())?
         }
         Ok(())
     }

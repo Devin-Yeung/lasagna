@@ -19,8 +19,8 @@ impl From<args::CLI> for Config {
         let default_input = std::fs::canonicalize(PathBuf::from("./")).unwrap();
         let default_output = PathBuf::from(format!("./{}.zip", parent_dir_name(&default_input)));
         Config {
-            input: args.input.unwrap_or_else(|| default_input),
-            output: args.output.unwrap_or_else(|| default_output),
+            input: args.input.unwrap_or(default_input),
+            output: args.output.unwrap_or(default_output),
             depth: args.depth,
             ignore_hidden: args.ignore_hidden,
             read_gitignore: args.read_gitignore,
