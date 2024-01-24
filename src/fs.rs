@@ -30,7 +30,7 @@ pub fn last_modified<T: AsRef<Path>>(path: T) -> zip::DateTime {
     let offset_time = OffsetDateTime::from(system_time);
     let local_offset = UtcOffset::current_local_offset().unwrap();
     let local_time = offset_time.to_offset(local_offset);
-    zip::DateTime::from_time(local_time).unwrap()
+    zip::DateTime::try_from(local_time).unwrap()
 }
 
 #[derive(Debug)]
