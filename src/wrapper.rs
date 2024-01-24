@@ -13,7 +13,6 @@ pub enum CompressionMethod {
     Zstd,
 }
 
-
 impl Into<zip::CompressionMethod> for CompressionMethod {
     fn into(self) -> zip::CompressionMethod {
         match self {

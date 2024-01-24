@@ -4,8 +4,8 @@ mod digest;
 mod fs;
 mod tree;
 mod tree_view;
-mod zipper;
 mod wrapper;
+mod zipper;
 
 use crate::config::Config;
 use crate::digest::ZipDigest;

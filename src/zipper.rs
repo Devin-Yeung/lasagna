@@ -37,11 +37,10 @@ impl<'a> Zipper<'a> {
         let mut dirs = self.collector.dirs();
         dirs.remove(0);
         for (absolute, relative) in dirs {
-            let mut option: FileOptions =
-                FileOptions::default()
-                    .last_modified_time(fs::last_modified(absolute))
-                    .compression_method(self.config.compression_method)
-                    .compression_level(self.config.compression_level);
+            let mut option: FileOptions = FileOptions::default()
+                .last_modified_time(fs::last_modified(absolute))
+                .compression_method(self.config.compression_method)
+                .compression_level(self.config.compression_level);
 
             #[cfg(unix)]
             {
@@ -71,10 +70,10 @@ impl<'a> Zipper<'a> {
 
     pub fn build_files(mut self) -> Self {
         for (absolute, relative) in self.collector.files() {
-            let mut option: FileOptions =
-                FileOptions::default().last_modified_time(fs::last_modified(absolute))
-                    .compression_method(self.config.compression_method)
-                    .compression_level(self.config.compression_level);
+            let mut option: FileOptions = FileOptions::default()
+                .last_modified_time(fs::last_modified(absolute))
+                .compression_method(self.config.compression_method)
+                .compression_level(self.config.compression_level);
 
             #[cfg(unix)]
             {

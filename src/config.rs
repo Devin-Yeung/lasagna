@@ -26,7 +26,7 @@ impl From<args::CLI> for Config {
             read_gitignore: args.read_gitignore,
             parent: args.parent,
             compression_method: args.compression_method.into(),
-            compression_level: args.compression_level
+            compression_level: args.compression_level,
         }
     }
 }
