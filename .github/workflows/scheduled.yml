@@ -24,6 +24,7 @@ jobs:
           # See https://github.com/lycheeverse/lychee/issues/634
           args: --accept 200,429 --verbose --no-progress .
           fail: true
+          failIfEmpty: false
   nightly:
     runs-on: ubuntu-latest
     name: ubuntu / nightly
