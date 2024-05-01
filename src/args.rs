@@ -37,5 +37,5 @@ pub struct CLI {
     pub compression_method: wrapper::CompressionMethod,
     /// Indicate the compression level
     #[clap(long, value_parser, required(false))]
-    pub compression_level: Option<i32>,
+    pub compression_level: Option<i64>,
 }

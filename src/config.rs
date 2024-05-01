@@ -11,7 +11,7 @@ pub struct Config {
     pub read_gitignore: bool,
     pub parent: bool,
     pub compression_method: zip::CompressionMethod,
-    pub compression_level: Option<i32>,
+    pub compression_level: Option<i64>,
 }
 
 impl From<args::CLI> for Config {
