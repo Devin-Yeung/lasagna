@@ -13,4 +13,4 @@ clap = { version = '4', features = ['derive'] }
 md-5 = "0.10.6"
 sha2 = "0.10.8"
 base16ct = { version = "0.2.0", features = ['alloc'] }
-time = { version = "0.3.37", features = ['std', 'local-offset'] }
+time = { version = "0.3.39", features = ['std', 'local-offset'] }
