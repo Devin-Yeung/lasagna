@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 ignore = "0.4"
-zip = "2.5.0"
+zip = "2.6.1"
 clap = { version = '4', features = ['derive'] }
 #hex-literal = "0.3.4"
 md-5 = "0.10.6"
