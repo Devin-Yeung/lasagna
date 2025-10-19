@@ -12,6 +12,6 @@ clap = { version = '4', features = ['derive'] }
 md-5 = "0.10.6"
 sha2 = "0.10.9"
 # see https://github.com/fizyk20/generic-array/issues/158
-generic-array = { version = "0.14.6" }
+generic-array = { version = "=0.14.6" }
 base16ct = { version = "0.3.0", features = ['alloc'] }
 time = { version = "0.3.44", features = ['std', 'local-offset'] }
