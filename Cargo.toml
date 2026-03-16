@@ -14,4 +14,4 @@ sha2 = "0.10.9"
 # see https://github.com/fizyk20/generic-array/issues/158
 generic-array = { version = "=0.14.6" }
 base16ct = { version = "1.0.0", features = ['alloc'] }
-time = { version = "0.3.44", features = ['std', 'local-offset'] }
+time = { version = "0.3.47", features = ['std', 'local-offset'] }
