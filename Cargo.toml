@@ -10,7 +10,7 @@ ignore = "0.4"
 zip = "6.0.0"
 clap = { version = '4', features = ['derive'] }
 md-5 = "0.10.6"
-sha2 = "0.10.9"
+sha2 = "0.11.0"
 # see https://github.com/fizyk20/generic-array/issues/158
 generic-array = { version = "=0.14.6" }
 base16ct = { version = "1.0.0", features = ['alloc'] }
